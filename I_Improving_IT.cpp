@@ -15,37 +15,27 @@ const int MOD = 1e9 + 7;
 const int INF = 1e18;
 void solve()
 {
-    function<int(string t)> cal = [&](string s)
+    int n, m;
+    cin >> n >> m;
+    vector<vector<int>> b(n + 1, vector<int>(m + 1));
+    vector<int> a(n + 2), dp(n + 2, -INF);
+    for (int i = 1; i <= n; i++)
     {
-        int tmpAns = 0;
-        int n = s.size();
-        vector<int> p(n);
-        for (int i = 1; i < n; i++)
+        cin >> a[i];
+        for (int j = 1; j <= min(m, n - i + 1); j++)
         {
-            int j = p[i - 1];
-            while (j > 0 && s[j] != s[i])
-            {
-                j = p[j - 1];
-            }
-            p[i] = j + (s[i] == s[j]);
+            cin >> b[i][j];
         }
-        for (int i = 0; i < n; i++)
-        {
-            tmpAns += p[i];
-        }
-        return tmpAns;
-    };
-    string s;
-    while (cin >> s)
-    {
-        int n = s.size();
-        int ans = 0;
-        for (int i = 0; i < n; i++)
-        {
-            ans += cal(s.substr(i, n));
-        }
-        cout << ans << "\n";
     }
+    dp[1] = -a[1];
+    for (int i = 2; i <= n + 1; i++)
+    {
+        for (int j = max(1LL, i - m); j < i; j++)
+        {
+            dp[i] = max(dp[i], dp[j] + b[j][i - j] - a[i]);
+        }
+    }
+    cout << -dp[n + 1];
 }
 
 int32_t main()

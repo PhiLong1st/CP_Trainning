@@ -15,36 +15,32 @@ const int MOD = 1e9 + 7;
 const int INF = 1e18;
 void solve()
 {
-    function<int(string t)> cal = [&](string s)
+    int t = 1;
+    function<bool(int val)> ask = [&](int val)
     {
-        int tmpAns = 0;
-        int n = s.size();
-        vector<int> p(n);
-        for (int i = 1; i < n; i++)
+        cout << "? " << val << "\n";
+        cout.flush();
+        int x;
+        cin >> x;
+        if (x == val)
         {
-            int j = p[i - 1];
-            while (j > 0 && s[j] != s[i])
-            {
-                j = p[j - 1];
-            }
-            p[i] = j + (s[i] == s[j]);
+            return true;
         }
-        for (int i = 0; i < n; i++)
+        if (x == 0)
         {
-            tmpAns += p[i];
+            cout << "! " << val << "\n";
+            cout.flush();
         }
-        return tmpAns;
+        else
+        {
+            cout << "! " << val - x << "\n";
+            cout.flush();
+        }
+        return false;
     };
-    string s;
-    while (cin >> s)
+    while (ask(t))
     {
-        int n = s.size();
-        int ans = 0;
-        for (int i = 0; i < n; i++)
-        {
-            ans += cal(s.substr(i, n));
-        }
-        cout << ans << "\n";
+        t *= 2;
     }
 }
 
