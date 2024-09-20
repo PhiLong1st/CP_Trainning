@@ -71,7 +71,7 @@ void solve() {
             r = mid - 1;
         }
     }
-    int maxx = 0, minn = 0;
+    int maxi = 0, minn = 0;
     int sum = 0;
     vector<int> save(n);
     for (int i = 0; i < n; i++)
