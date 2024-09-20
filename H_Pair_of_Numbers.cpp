@@ -59,31 +59,19 @@ void solve()
         }
         st.push(i);
     }
-    // for (int i = 1; i <= n; i++)
-    // {
-    //     cout << l[i] << " ";
-    // }
-    // for (int i = 1; i <= n; i++)
-    // {
-    //     cout << r[i] << " ";
-    // }
     int ans = 0, res = 0;
     for (int i = 1; i <= n; i++)
     {
         ans = max(ans, r[i] - l[i]);
     }
-    // vector<int> save;
     set<pll> save;
     for (int i = 1; i <= n; i++)
     {
         if (r[i] - l[i] == ans)
         {
-            // cout << i << " ";
-            // save.push_back(l[i]);
-            save.insert({l[i], r[i] - l[i]});
+            save.insert({ l[i], r[i] - l[i] });
         }
     }
-    // sort(save.begin(), save.end());
     cout << save.size() << " " << ans << "\n";
     for (auto i : save)
     {

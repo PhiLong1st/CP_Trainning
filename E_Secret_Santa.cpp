@@ -29,8 +29,7 @@ void solve()
         {
             continue;
         }
-        if (cnt[a[i]] == 0)
-        {
+        if (cnt[a[i]] == 0){
             res++;
             ans[i] = a[i];
             used[a[i]] = 1;
@@ -82,7 +81,7 @@ void solve()
         for (int i = 1; i < vt.size(); i++)
         {
             if (ans[vt[i]] == vt[i])
-            {   
+            {
                 swap(ans[vt[i]], ans[vt[i - 1]]);
             }
         }
