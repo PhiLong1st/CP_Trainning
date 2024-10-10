@@ -25,68 +25,35 @@ void solve() {
     for (int i = 1; i <= n; i++) {
         cin >> s[i];
     }
-    int sum0 = 0, sum1 = 0;
+    int cnt_zero = 0, cnt_one = 0;
     for (int i = 1; i <= n; i++) {
         for (int j = 1; j <= m; j++) {
-            sum0 += (s[i][j - 1] == '1') ? 0 : a[i][j];
-            sum1 += (s[i][j - 1] == '0') ? 0 : a[i][j];
+            cnt_zero += (s[i][j - 1] == '1') ? 0 : a[i][j];
+            cnt_one += (s[i][j - 1] == '0') ? 0 : a[i][j];
         }
     }
-    int dist = abs(sum0 - sum1);
-    if (dist == 0) {
-        return void(cout << "YES\n");
-    }
-    // cout << sum0 << " " << sum1 << "\n";
+    int dist = abs(cnt_zero - cnt_one);
+    if (dist == 0) return void(cout << "YES\n");
     for (int i = 1; i <= n; i++) {
         for (int j = 1; j <= m; j++) {
             sum2d[i][j] = sum2d[i - 1][j] + sum2d[i][j - 1] - sum2d[i - 1][j - 1] + (s[i][j - 1] == '1');
-            // cout << dp[i][j] << " ";
         }
-        // cout << "\n";
     }
-    set<int> div;
+    set<int> divisors;
     for (int i = k; i <= n; i++) {
         for (int j = k; j <= m; j++) {
-            int sum = sum2d[i][j] - sum2d[i - k][j] - sum2d[i][j - k] + sum2d[i - k][j - k];
-            if (abs(2 * sum - k * k) != 0) {
-                div.insert(abs(2 * sum - k * k));
+            int val = sum2d[i][j] - sum2d[i - k][j] - sum2d[i][j - k] + sum2d[i - k][j - k];
+            if (abs(2 * val - k * k) != 0) {
+                divisors.insert(abs(2 * val - k * k));
             }
         }
     }
-    if (div.empty()) {
-        return void(cout << "NO\n");
-    }
-    vector<int>dp(1000);
-    dp[0] = 1;
-    int last = 0;
-
-    // cout << dist << " ";
+    if (divisors.empty()) return void(cout << "NO\n");
     int gcd = 0;
-    for (int val : div) {
-        // cout << val << " ";
+    for (int val : divisors) {
         gcd = __gcd(gcd, val);
     }
-    if (dist % gcd == 0) {
-        cout << "YES\n";
-    }
-    else {
-        cout << "NO\n";
-    }
-
-    // for (int i = 0; i < 1000; i++) {
-    //     for (int val : div) {
-    //         if (i >= val) {
-    //             dp[i] = max(dp[i], dp[i - val]);
-    //         }
-    //     }
-    //     if (dp[i] == 1) {
-    //         last = i;
-    //     }
-    // }
-    // // cout << last << "a";
-    // if (last != 0)
-    //     dist %= last;
-    // cout << ((dp[dist]) ? "YES\n" : "NO\n");
+    cout << ((dist % gcd == 0) ? "YES\n" : "NO\n");
 }
 
 int32_t main() {
