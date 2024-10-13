@@ -44,7 +44,7 @@ struct Segment_Tree
         }
         st[id] = st[id * 2] + st[id * 2 + 1];
     }
-    int getSum(int id, int l, int r, int u, int v)
+    int getMaxx(int id, int l, int r, int u, int v)
     {
         if (u > v)
             return 0;
@@ -58,8 +58,8 @@ struct Segment_Tree
         }
         int mid = (l + r) >> 1;
         ;
-        int s1 = getSum(id * 2, l, mid, u, v);
-        int s2 = getSum(id * 2 + 1, mid + 1, r, u, v);
+        int s1 = getMaxx(id * 2, l, mid, u, v);
+        int s2 = getMaxx(id * 2 + 1, mid + 1, r, u, v);
         return s1 + s2;
     }
 };
@@ -75,19 +75,19 @@ void solve()
         save.push_back(make_pair(i, a[i]));
     }
     function<bool(pll x, pll y)> cmp = [&](pll x, pll y)
-    {
-        if (x.second == y.second)
         {
-            return x.first > y.first;
-        }
-        return x.second < y.second;
-    };
+            if (x.second == y.second)
+            {
+                return x.first > y.first;
+            }
+            return x.second < y.second;
+        };
     sort(save.begin(), save.end(), cmp);
     Segment_Tree tree(n + 1);
     int ans = 0;
     for (pll seg : save)
     {
-        int val = tree.getSum(1, 1, n, seg.first + 1, n);
+        int val = tree.getMaxx(1, 1, n, seg.first + 1, n);
         ans += val;
         tree.update(1, 1, n, seg.first, 1);
     }

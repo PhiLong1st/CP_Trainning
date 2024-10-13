@@ -57,7 +57,7 @@ struct Segment_Tree
         update(id * 2 + 1, mid + 1, r, u, v);
         st[id].val = st[id * 2].val + st[id * 2 + 1].val;
     }
-    int getSum(int id, int l, int r, int u, int v)
+    int getMaxx(int id, int l, int r, int u, int v)
     {
         if (l > v || r < u)
         {
@@ -69,8 +69,8 @@ struct Segment_Tree
         }
         down(id, l, r);
         int mid = (l + r) >> 1;
-        int s1 = getSum(id * 2, l, mid, u, v);
-        int s2 = getSum(id * 2 + 1, mid + 1, r, u, v);
+        int s1 = getMaxx(id * 2, l, mid, u, v);
+        int s2 = getMaxx(id * 2 + 1, mid + 1, r, u, v);
         return s1 + s2;
     }
 };
@@ -85,23 +85,23 @@ void solve()
         cin >> a[i];
     }
     function<int(int x, int num)> cal = [&](int x, int num)
-    {
-        for (int i = 1; i <= num; i++)
         {
-            if (x < 10)
+            for (int i = 1; i <= num; i++)
             {
-                break;
+                if (x < 10)
+                {
+                    break;
+                }
+                int res = 0;
+                while (x > 0)
+                {
+                    res += x % 10;
+                    x /= 10;
+                }
+                x = res;
             }
-            int res = 0;
-            while (x > 0)
-            {
-                res += x % 10;
-                x /= 10;
-            }
-            x = res;
-        }
-        return x;
-    };
+            return x;
+        };
     for (int i = 1; i <= q; i++)
     {
         int type;
@@ -116,7 +116,7 @@ void solve()
         {
             int x;
             cin >> x;
-            int num = tree.getSum(1, 1, n, x, x);
+            int num = tree.getMaxx(1, 1, n, x, x);
             cout << cal(a[x], num) << "\n";
         }
     }

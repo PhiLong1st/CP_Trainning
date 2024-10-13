@@ -14,7 +14,7 @@ const int MOD = 1e9 + 7;
 void solve() {
     int n;
     cin >> n;
-    vector<int> a(n + 1), valChild(n + 1), sumChild(n + 1), sumPar(n + 1);
+    vector<int> a(n + 1), sum_down(n + 1), sumChild(n + 1), sum_up(n + 1);
     vector<vector<int>>adj(n + 1, vector<int>());
     int sumAll = 0;
     for (int i = 1; i <= n; ++i) {
@@ -33,7 +33,7 @@ void solve() {
             if (g == par) continue;
             dfs(x, g);
             sumChild[x] += sumChild[g];
-            valChild[x] += valChild[g] + sumChild[g];
+            sum_down[x] += sum_down[g] + sumChild[g];
         }
         sumChild[x] += a[x];
         // cout << par << ' ' << x << ' ' << valChild[x] << ' ' << sumChild[x] << '\n';
@@ -43,7 +43,7 @@ void solve() {
     dfs2 = [&](int par, int x) {
         for (int g : adj[x]) {
             if (g == par) continue;
-            sumPar[g] = sumPar[x] + (sumAll - sumChild[g]) + (valChild[x] - valChild[g] - sumChild[g]);
+            sum_up[g] = sum_up[x] + sumAll - sumChild[g] + sum_down[x] - sum_down[g] - sumChild[g];
             dfs2(x, g);
             // cout << g << ' ' << x << ' ' << sumPar[g] << ' ' << (valChild[x] - valChild[g] - sumChild[g]) << '\n';
         }
@@ -51,8 +51,8 @@ void solve() {
     dfs2(0, 1);
     int ans = 0;
     for (int i = 1; i <= n; ++i) {
-        // cerr << valChild[i] << ' ';
-        ans = max(ans, valChild[i] + sumPar[i]);
+        // cerr << sum_up[i] << ' ';
+        ans = max(ans, sum_down[i] + sum_up[i]);
     }
     cout << ans;
 }

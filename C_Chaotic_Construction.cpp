@@ -44,7 +44,7 @@ struct Segment_Tree
         }
         st[id] = st[id * 2] + st[id * 2 + 1];
     }
-    int getSum(int id, int l, int r, int u, int v)
+    int getMaxx(int id, int l, int r, int u, int v)
     {
         if (l > v || r < u)
         {
@@ -56,8 +56,8 @@ struct Segment_Tree
         }
         int mid = (l + r) >> 1;
         ;
-        int s1 = getSum(id * 2, l, mid, u, v);
-        int s2 = getSum(id * 2 + 1, mid + 1, r, u, v);
+        int s1 = getMaxx(id * 2, l, mid, u, v);
+        int s2 = getMaxx(id * 2 + 1, mid + 1, r, u, v);
         return s1 + s2;
     }
 };
@@ -76,7 +76,7 @@ void solve()
             cin >> l >> r;
             if (l > r)
                 swap(l, r);
-            bool ok = (tree.getSum(1, 1, n, l, r) == 0) || (tree.getSum(1, 1, n, 1, l) == 0 && tree.getSum(1, 1, n, r, n) == 0);
+            bool ok = (tree.getMaxx(1, 1, n, l, r) == 0) || (tree.getMaxx(1, 1, n, 1, l) == 0 && tree.getMaxx(1, 1, n, r, n) == 0);
             if (ok)
             {
                 cout << "possible\n";
