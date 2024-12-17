@@ -1,7 +1,7 @@
 
 /*
     Code by: KoKoDuDu
-    Created: 17.12.2024 11:59:28
+    Created: 17.12.2024 11:46:57
 */
 #include <bits/stdc++.h>
 
@@ -22,21 +22,14 @@ void solve() {
         };
     int l = 2, r = 999;
     int ans = 0;
-    for (int i = 1; i <= 7;++i) {
-        int x1 = l + (r - l) / 3;
-        int x2 = r - (r - l) / 3;
-        int val = ask(x1, x2);
-        if (val == x1 * x2) {
-            l = x2 + 1;
+    while (l <= r) {
+        int mid = (l + r) >> 1;
+        if (ask(1, mid) > mid) {
+            r = mid - 1;
+            ans = mid;
         }
-        if (val == x1 * (x2 + 1)) {
-            l = x1 + 1;
-            r = x2 - 1;
-            ans = x2;
-        }
-        if (val == (x1 + 1) * (x2 + 1)) {
-            r = x1 - 1;
-            ans = x1;
+        else {
+            l = mid + 1;
         }
     }
     cout << "! " << ans << '\n';
