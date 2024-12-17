@@ -22,7 +22,7 @@ void solve() {
     //b: 1
     //c: 2
 
-    while (q--) {
+    while (q--) {   
         int x, y, z;
         cin >> x >> y >> z;
         vector<vector<int>> dp_a(n + 1, vector<int>(max(n, x) + 1, 0));
