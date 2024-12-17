@@ -1,75 +1,75 @@
 
+/*
+    Code by: KoKoDuDu
+    Created: 17.12.2024 11:11:45
+*/
 #include <bits/stdc++.h>
-#define int long long
-#define fu(i, a, b) for (int i = a; i <= b; i++)
-#define fd(i, a, b) for (int i = a; i >= b; i--)
-#define pii pair<int, int>
-#define pll pair<ll, ll>
-#define ff first
-#define ss second
-using namespace std;
-const int mod = 1e9 + 7;
-const int MAX = 2e5;
-vector<int> fact(MAX + 1, 1), inv(MAX + 1, 1);
 
-int pow(int a, int b, int m)
-{
-    int res = 1;
-    while (b > 0)
-    {
-        if (b & 1)
-            res = res * a % m;
-        a = a * a % m;
-        b >>= 1;
+using namespace std;
+
+#define int long long
+#define pll pair<int, int>
+
+const int MOD = 1e9 + 7;
+
+struct Combinatorics {
+    int n, MOD;
+    vector<int> fact, inv, fact_inv;
+
+    Combinatorics(int n, int MOD) : n(n), MOD(MOD), fact(n + 1), inv(n + 1), fact_inv(n + 1) {
+        inv[1] = 1;
+        for (int i = 2; i <= n; ++i) {
+            inv[i] = MOD - (MOD / i) * inv[MOD % i] % MOD;
+        }
+
+        fact[0] = fact_inv[0] = 1;
+        for (int i = 1; i <= n; ++i) {
+            fact[i] = fact[i - 1] * i % MOD;
+            fact_inv[i] = fact_inv[i - 1] * inv[i] % MOD;
+        }
     }
-    return res;
-}
-void solve()
-{
+
+    int get_nCk(int n, int k) {
+        if (n < 0 || k < 0 || n < k) return 0;
+        return fact[n] * fact_inv[k] % MOD * fact_inv[n - k] % MOD;
+    }
+    int get_inv_fact(int i) {
+        return fact_inv[i];
+    }
+    int get_fact(int i) {
+        return fact[i];
+    }
+    int get_inv(int i) {
+        return inv[i];
+    }
+};
+Combinatorics comb(200010, MOD);
+void solve() {
     int n, k;
     cin >> n >> k;
     vector<int> a(n + 1);
-    fu(i, 1, n)
-    {
+    int cnt = 0;
+
+    for (int i = 1; i <= n; ++i) {
         cin >> a[i];
+        cnt += a[i];
     }
-    sort(a.begin() + 1, a.end());
-    vector<int> cnt(n + 2, 0);
-    fd(i, n, 1)
-    {
-        cnt[i] = cnt[i + 1] + (a[i] == 1);
+    int ans = 0;
+    for (int i = (k + 1) / 2; i <= k; ++i) {
+        ans += comb.get_nCk(cnt, i) * comb.get_nCk(n - cnt, k - i) % MOD;
+        ans %= MOD;
     }
-
-    auto get_nCk = [&](int n, int k)
-    {
-        if (n < k)
-            return 0LL;
-        return fact[n] * inv[k] % mod * inv[n - k] % mod;
-    };
-
-    int res = 0;
-    k /= 2;
-    fu(i, 1, n)
-    {
-        if (a[i] == 1)
-        {
-            res = (res + get_nCk(i - 1, k) * get_nCk(cnt[i + 1], k)) % mod;
-        }
-    }
-    cout << res << "\n";
+    cout << ans << '\n';
 }
-int32_t main()
-{
-    ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
-    fu(i, 1, MAX)
-    {
-        fact[i] = fact[i - 1] * i % mod;
-        inv[i] = pow(fact[i], mod - 2, mod);
-    }
-    int t;
+
+int32_t main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    int t = 1;
     cin >> t;
-    while (t-- > 0)
-    {
+    while (t--) {
         solve();
     }
+    return 0;
 }
