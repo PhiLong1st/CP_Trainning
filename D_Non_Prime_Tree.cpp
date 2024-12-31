@@ -17,6 +17,7 @@ void solve() {
     cin >> n;
     vector<vector<int>> adj(n + 1, vector<int>());
     vector<vector<int>> height(n + 1, vector<int>());
+    vector<int> ans(n + 1);
     for (int i = 1; i < n; ++i) {
         int u, v;
         cin >> u >> v;
@@ -32,13 +33,40 @@ void solve() {
         }
         };
     dfs(1, 0, 1);
+    int pre = 2, suf = 2 * n;
     for (int i = 1; i <= n; i++) {
-        cout << i << "- ";
-        for (int x : height[i]) {
-            cout << x << ' ';
+        // cout << i << "- ";
+        if (i % 2 == 0) {
+            for (int x : height[i]) {
+                // cout << x << ' ';
+                ans[x] = pre;
+                pre += 2;
+            }
         }
-        cout << "\n---\n";
+        else {
+            for (int x : height[i]) {
+                // cout << x << ' ';
+                ans[x] = suf;
+                suf -= 2;
+            }
+        }
+        // cout << "\n---\n";
     }
+    function<void(int, int, int)> check = [&](int x, int par, int h) {
+        for (int g : adj[x]) {
+            if (g != par) {
+                if (abs(ans[g] - ans[x]) == 2) {
+                    ans[g] = ans[x] - 1;
+                }
+                check(g, x, h + 1);
+            }
+        }
+        };
+    check(1, 0, 1);
+    for (int i = 1; i <= n; ++i) {
+        cout << ans[i] << ' ';
+    }
+    cout << '\n';
 }
 
 int32_t main() {

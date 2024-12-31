@@ -15,20 +15,58 @@ const int MOD = 1e9 + 7;
 void solve() {
     int n, s, t;
     cin >> n;
-    vector<int> a(n + 1);
-    map<array<int, 2>, vector<array<int, 2>>>adj;
+    vector<int> a(n + 1), vst(1000000), trace(1000000);
     for (int i = 1; i <= n; ++i) {
         cin >> a[i];
     }
+    vector<vector<int> >adj(1000000, vector<int>());
     cin >> s >> t;
     for (int i = 1; i <= n; ++i) {
         int val = a[i];
         for (int j = 2; j * j <= a[i]; ++j) {
             if (val % j == 0) {
-                adj[{1LL, a[i]}].push_back({ 2LL, j });
-                adj[{2LL, j}].push_back({ 1LL, a[i] });
+                adj[i].push_back(n + j);
+                adj[n + j].push_back(i);
+                while (val % j == 0) {
+                    val /= j;
+                }
             }
         }
+        if (val != 1) {
+            adj[i].push_back(n + val);
+            adj[n + val].push_back(i);
+        }
+    }
+    queue<int> save;
+    save.push(s);
+    vst[s] = 1;
+    while (!save.empty()) {
+        int x = save.front();
+        save.pop();
+        if (x == t) {
+            cout << (vst[x] + 1) / 2 << '\n';
+            vector<int> path;
+            path.push_back(t);
+            while(trace[x] != 0) {
+                path.push_back(trace[x]);
+                x = trace[x];
+            }
+            reverse(path.begin(),path.end());
+            for (int i = 0; i < path.size(); i += 2) {
+                cout << path[i] << ' ';
+            }
+            break;
+        }
+        for (int g: adj[x]) {
+            if (!vst[g]) {
+                vst[g] = vst[x] + 1;
+                trace[g] = x;
+                save.push(g);
+            }
+        }
+    }
+    if (vst[t] == 0) {
+        cout << -1 ;
     }
 }
 
@@ -41,4 +79,4 @@ int32_t main() {
         solve();
     }
     return 0;
-}
+} 

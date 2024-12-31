@@ -15,31 +15,26 @@ const int MOD = 1e9 + 7;
 void solve() {
     int n, q;
     cin >> n >> q;
-    vector<int> a(n + 1), prefix_sum(n + 1);
+    vector<int> a(n + 1), prefix_sum(2 * n + 1);
     for (int i = 1; i <= n; ++i) {
         cin >> a[i];
+    }
+    for (int i = 1; i <= n; ++i) {
+        a.push_back(a[i]);
+    }
+    for (int i = 1; i <= 2 * n; ++i) {
         prefix_sum[i] = prefix_sum[i - 1] + a[i];
     }
+    auto query = [&](int prefix) -> int {
+        int ans = prefix / n * prefix_sum[n];
+        int start = prefix / n;
+        ans += prefix_sum[start + prefix % n] - prefix_sum[start];
+        return ans;
+        };
     while (q--) {
         int l, r;
         cin >> l >> r;
-        int left = (l + n - 1) / n;
-        int right = (r + n - 1) / n;
-        int ans = 0;
-        int pre = 0, suf = 0;
-        cout << left << ' ' << right << '\n';
-        if (right != left) {
-            ans = (right - left - 1) * prefix_sum[n];
-            suf = prefix_sum[min(n, right + r - n * (right - 1))] - prefix_sum[right - 1] + prefix_sum[(right + r - n * (right - 1) - 1) % n];
-            pre = prefix_sum[n] - prefix_sum[min(left + l - n * (left - 1) - 1, n)] + prefix_sum[(left + l - n * (left - 1)) % n];
-        }
-        else {
-        }
-        cout << prefix_sum[n] - prefix_sum[min(left + l - n * (left - 1) - 1, n)] << ' ';
-        // cout << suf << ' ' << pre << " ";
-        // cout << pre << ' ' << suf << ' ' << prefix_sum[(right + r - n * (right - 1) - 1) % n] << '\n';
-        // cout << prefix_sum[min(n, right + r - n * (right - 1))] - prefix_sum[right - 1] << '\n';
-        cout << ans + suf + pre << '\n';
+        cout << query(r) - query(l - 1) << '\n';
     }
 }
 
